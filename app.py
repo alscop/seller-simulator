@@ -74,37 +74,38 @@ SCORE_CAP = 11
 # 입력 옵션 정의 (구간 선택 + 점수 + 모델 입력용 대표값)
 # ---------------------------------------------------
 DELIVERY_OPTIONS = {
-    "1~7일": {"score": 5, "days": 4},
-    "8~11일": {"score": 4, "days": 9.5},
-    "12~14일": {"score": 2, "days": 13},
-    "15~20일": {"score": 1, "days": 17.5},
-    "21일 이상": {"score": 0, "days": 25},
+    "1~7일(5점)": {"score": 5, "days": 4},
+    "8~11일(4점)": {"score": 4, "days": 9.5},
+    "12~14일(2점)": {"score": 2, "days": 13},
+    "15~20일(1점)": {"score": 1, "days": 17.5},
+    "21일 이상(0점)": {"score": 0, "days": 25},
 }
 
+# 1R$ ≈ 284원 기준 환산
 PRICE_OPTIONS = {
-    "~50R$": {"score": 1, "price": 35},
-    "50~100R$": {"score": 3, "price": 75},
-    "100~150R$": {"score": 5, "price": 125},
-    "150~300R$": {"score": 3, "price": 220},
-    "300R$~": {"score": 2, "price": 400},
+    "~50R$(~14,200원)(1점)": {"score": 1, "price": 35},
+    "50~100R$(14,200~28,400원)(3점)": {"score": 3, "price": 75},
+    "100~150R$(28,400~42,600원)(5점)": {"score": 5, "price": 125},
+    "150~300R$(42,600~85,200원)(3점)": {"score": 3, "price": 220},
+    "300R$~(85,200원~)(2점)": {"score": 2, "price": 400},
 }
 
 CATEGORY_OPTIONS = {
-    "1개": {"score": 1, "n": 1},
-    "2개": {"score": 2, "n": 2},
-    "3개": {"score": 4, "n": 3},
-    "4개 이상": {"score": 5, "n": 4},
+    "1개(1점)": {"score": 1, "n": 1},
+    "2개(2점)": {"score": 2, "n": 2},
+    "3개(4점)": {"score": 4, "n": 3},
+    "4개 이상(5점)": {"score": 5, "n": 4},
 }
 
 STATE_OPTIONS = {
-    "RS": 5,
-    "PR": 4,
-    "SC": 4,
-    "기타": 4,
-    "DF": 4,
-    "MG": 3,
-    "RJ": 1,
-    "SP": 1,
+    "RS(히우그란지두술)(5점)": {"score": 5, "code": "RS"},
+    "PR(파라나)(4점)": {"score": 4, "code": "PR"},
+    "SC(산타카타리나)(4점)": {"score": 4, "code": "SC"},
+    "DF(브라질리아 연방구)(4점)": {"score": 4, "code": "DF"},
+    "기타 지역(4점)": {"score": 4, "code": "기타"},
+    "MG(미나스제라이스)(3점)": {"score": 3, "code": "MG"},
+    "RJ(리우데자네이루)(1점)": {"score": 1, "code": "RJ"},
+    "SP(상파울루)(1점)": {"score": 1, "code": "SP"},
 }
 
 # ---------------------------------------------------
@@ -179,7 +180,7 @@ scores = {
     "배송": DELIVERY_OPTIONS[delivery_choice]["score"],
     "가격": PRICE_OPTIONS[price_choice]["score"],
     "카테고리": CATEGORY_OPTIONS[category_choice]["score"],
-    "지역": STATE_OPTIONS[state_choice],
+    "지역": STATE_OPTIONS[state_choice]["score"],
 }
 total_score = sum(scores.values())
 
@@ -217,8 +218,9 @@ if submit:
     row["avg_price_log"] = np.log1p(PRICE_OPTIONS[price_choice]["price"])
     row["unique_categories"] = CATEGORY_OPTIONS[category_choice]["n"]
 
-    if state_choice != "DF":
-        row[f"state_{state_choice}"] = 1
+    state_code = STATE_OPTIONS[state_choice]["code"]
+    if state_code != "DF":
+        row[f"state_{state_code}"] = 1
 
     X_input = pd.DataFrame([row])[MODEL_COLUMNS]
     churn_proba = model.predict_proba(X_input)[0][1]
