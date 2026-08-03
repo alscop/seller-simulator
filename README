@@ -1,0 +1,22 @@
+# 배포 방법 (GitHub + Streamlit Community Cloud)
+
+## 1. GitHub에 올리기
+1. github.com 접속, 계정 없으면 가입
+2. 우측 상단 + 버튼 → New repository
+3. 이름 예시: seller-simulator (Public으로 설정)
+4. 아래 3개 파일을 그대로 업로드 (드래그 앤 드롭 가능)
+   - app.py
+   - requirements.txt
+   - survey_model.pkl
+
+## 2. Streamlit Community Cloud 연결
+1. share.streamlit.io 접속, GitHub 계정으로 로그인
+2. New app 클릭
+3. 방금 만든 저장소(seller-simulator) 선택
+4. Main file path에 app.py 입력
+5. Deploy 클릭 (1~2분 정도 빌드 시간 소요)
+
+## 3. 완료
+- 빌드가 끝나면 https://[앱이름].streamlit.app 형태의 링크가 생성됨
+- 이 링크로 QR코드를 만들어 발표 때 공유하면 됨
+- 이후 app.py 파일을 GitHub에서 수정하면 앱이 자동으로 업데이트됨
